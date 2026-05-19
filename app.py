@@ -76,7 +76,7 @@ section[data-testid="stSidebar"] { display: none; }
 """, unsafe_allow_html=True)
 
 st.markdown("""
-<a href="https://cuadro-de-mando-financiero-m5kczw8rezx8fx8dvfcz8z.streamlit.app/" target="_self"
+<a href="https://cuadro--de-mando-financiero-kdeggfgf4ubpa958dwmktw.streamlit.app/" target="_self"
    style="display:inline-block;background:#0052FF;color:white;font-weight:700;font-size:15px;
           padding:12px 28px;border-radius:8px;text-decoration:none;
           box-shadow:0 2px 8px rgba(0,0,0,0.2);margin-bottom:20px;">
