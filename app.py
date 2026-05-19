@@ -77,10 +77,10 @@ section[data-testid="stSidebar"] { display: none; }
 
 st.markdown("""
 <a href="https://cuadro-de-mando-financiero-m5kczw8rezx8fx8dvfcz8z.streamlit.app/" target="_self"
-   style="position:fixed;top:14px;right:16px;z-index:9999;background:#0052FF;color:white;
-          font-weight:700;font-size:13px;padding:8px 18px;border-radius:8px;
-          text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
-   ← Inicio
+   style="display:inline-block;background:#0052FF;color:white;font-weight:700;font-size:15px;
+          padding:12px 28px;border-radius:8px;text-decoration:none;
+          box-shadow:0 2px 8px rgba(0,0,0,0.2);margin-bottom:20px;">
+   ← Back
 </a>
 """, unsafe_allow_html=True)
 
