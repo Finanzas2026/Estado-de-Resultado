@@ -6,49 +6,19 @@ FILE_ID = st.secrets["FILE_ID"]
 RUTA    = f"https://docs.google.com/spreadsheets/d/{FILE_ID}/export?format=xlsx"
 HOJA    = "P&L-Presupuesto_2026-2028"
 
-st.set_page_config(page_title="CDP – Estado de Resultados", layout="wide")
-
-def check_password():
-    import time
-    SESSION_TIMEOUT = 8 * 3600  # 8 horas en segundos
-    now = time.time()
-    auth_time = st.session_state.get("auth_time", 0)
-    if st.session_state.get("authenticated") and (now - auth_time) < SESSION_TIMEOUT:
-        return
-    st.session_state.authenticated = False
-    st.markdown("""
-    <style>
-    .auth-box { max-width:380px; margin:80px auto 0 auto; padding:36px 32px;
-                background:#fff; border-radius:14px; box-shadow:0 4px 20px rgba(0,0,0,0.10); }
-    </style>
-    <div class="auth-box">
-      <div style="font-size:22px;font-weight:900;color:#0052FF;margin-bottom:6px;">🔒 Acceso Restringido</div>
-      <div style="font-size:13px;color:#888;margin-bottom:20px;">Ingresa la contraseña para continuar</div>
-    </div>
-    """, unsafe_allow_html=True)
-    pwd = st.text_input("Contraseña", type="password", placeholder="Contraseña", label_visibility="collapsed")
-    if st.button("Ingresar", use_container_width=True):
-        if pwd == st.secrets["password"]:
-            st.session_state.authenticated = True
-            st.session_state.auth_time = time.time()
-            st.rerun()
-        else:
-            st.error("Contraseña incorrecta")
-    st.stop()
-
-check_password()
+st.set_page_config(page_title="ESTADO DE RESULTADO - DASHBOARD", layout="wide")
 
 st.markdown("""
 <style>
 .main .block-container {
+    min-width: 1100px;
     max-width: 1400px;
     padding-top: 2rem;
     box-sizing: border-box;
-    overflow-x: auto;
 }
 section[data-testid="stSidebar"] { display: none; }
 @media (max-width: 768px) {
-    .main .block-container { padding: 1rem 0.5rem; overflow-x: auto; }
+    .main .block-container { min-width: 1100px; overflow-x: auto; }
 }
 .kpi-card {
     background: #ffffff;
@@ -64,24 +34,15 @@ section[data-testid="stSidebar"] { display: none; }
     align-items: center;
     box-sizing: border-box;
 }
-.kpi-label { font-size: 14px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3; word-break: break-word; }
+.kpi-label { font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3; word-break: break-word; }
 .kpi-val   { font-size: 18px; font-weight: 900; color: #0052FF; margin: 5px 0 3px; }
 .kpi-sub   { font-size: 11px; color: #888; }
 .section-title {
-    font-size: 26px; font-weight: 900; color: #0052FF;
+    font-size: 20px; font-weight: 900; color: #0052FF;
     letter-spacing: 1.5px; text-transform: uppercase;
     margin: 24px 0 12px;
 }
 </style>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<a href="https://cuadro--de-mando-financiero-kdeggfgf4ubpa958dwmktw.streamlit.app/" target="_self"
-   style="display:inline-block;background:#0052FF;color:white;font-weight:700;font-size:15px;
-          padding:12px 28px;border-radius:8px;text-decoration:none;
-          box-shadow:0 2px 8px rgba(0,0,0,0.2);margin-bottom:20px;">
-   ← Back
-</a>
 """, unsafe_allow_html=True)
 
 # ── CARGAR DATOS ───────────────────────────────────────────────────────────────
@@ -109,7 +70,7 @@ def fmt(v, tipo="num"):
 # ── COLUMNAS ───────────────────────────────────────────────────────────────────
 # col1=Descripción  col2=Ejecutado2025  col3=Presupuesto2025
 # col5=Pres2026     col6=Pres2027       col7=Pres2028
-EJ25, PR25, PR26, PR27, PR28, VAR, VAR_PCT = 2, 3, 5, 6, 7, 9, 10
+EJ25, PR25, PR26, PR27, PR28 = 2, 3, 5, 6, 7
 
 # ── EXTRACCIÓN DE VALORES CLAVE ────────────────────────────────────────────────
 data = {
@@ -140,9 +101,9 @@ data = {
 
 # ── TÍTULO ─────────────────────────────────────────────────────────────────────
 st.markdown("""
-<div style="background:#0052FF;padding:28px 36px;border-radius:10px;margin-bottom:24px;">
-  <div style="color:white;font-size:34px;font-weight:900;letter-spacing:3px;">ESTADO DE RESULTADO - DASHBOARD</div>
-  <div style="color:#D0E8FF;font-size:16px;font-weight:600;margin-top:6px;">Presupuesto 2026 · 2027 · 2028 vs Ejecutado 2025</div>
+<div style="background:#0052FF;padding:18px 28px;border-radius:10px;margin-bottom:24px;">
+  <div style="color:white;font-size:26px;font-weight:900;letter-spacing:2px;">ESTADO DE RESULTADOS - DASHBOARD</div>
+  <div style="color:#D0E8FF;font-size:13px;font-weight:600;">Presupuesto 2026 · 2027 · 2028 vs Ejecutado 2025</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -197,7 +158,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 # ── TABLA P&L RESUMEN ──────────────────────────────────────────────────────────
 st.markdown('<hr style="border:none;border-top:2px solid #e0e0e0;margin:24px 0;">', unsafe_allow_html=True)
-st.markdown('<div class="section-title" style="text-align:center;">Estado de Resultados — Resumen</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">Estado de Resultados — Resumen</div>', unsafe_allow_html=True)
 
 FILAS_PL = [
     (8,   "Ingresos",                      True),
@@ -219,56 +180,42 @@ FILAS_PL = [
 ]
 
 header = (
-    '<div style="display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 1fr 1fr 0.8fr;'
-    'padding:10px 16px;background:#0052FF;border-radius:10px 10px 0 0;">'
-    '<span style="color:white;font-weight:700;font-size:15px;">Descripción</span>'
-    '<span style="color:white;font-weight:700;text-align:right;font-size:15px;">Ej. 2025</span>'
-    '<span style="color:white;font-weight:700;text-align:right;font-size:15px;">Pres. 2026</span>'
-    '<span style="color:white;font-weight:700;text-align:right;font-size:15px;">Pres. 2027</span>'
-    '<span style="color:white;font-weight:700;text-align:right;font-size:15px;">Pres. 2028</span>'
-    '<span style="color:white;font-weight:700;text-align:right;font-size:15px;">Var. ($)</span>'
-    '<span style="color:white;font-weight:700;text-align:right;font-size:15px;">Var. %</span>'
+    '<div style="display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 1fr;'
+    'padding:10px 20px;background:#0052FF;border-radius:10px 10px 0 0;">'
+    '<span style="color:white;font-weight:700;">Descripción</span>'
+    '<span style="color:white;font-weight:700;text-align:right;">Ej. 2025</span>'
+    '<span style="color:white;font-weight:700;text-align:right;">Pres. 2026</span>'
+    '<span style="color:white;font-weight:700;text-align:right;">Pres. 2027</span>'
+    '<span style="color:white;font-weight:700;text-align:right;">Pres. 2028</span>'
     '</div>'
 )
 
 rows_html = ""
 for i, (fila, nombre, es_total) in enumerate(FILAS_PL):
-    v_ej25  = val(fila, EJ25)
-    v_pr26  = val(fila, PR26)
-    v_pr27  = val(fila, PR27)
-    v_pr28  = val(fila, PR28)
-    v_var   = val(fila, VAR)
-    v_pct   = val(fila, VAR_PCT)
+    v_ej25 = val(fila, EJ25)
+    v_pr26 = val(fila, PR26)
+    v_pr27 = val(fila, PR27)
+    v_pr28 = val(fila, PR28)
     if es_total:
-        bg, fw = "#d0e8ff", "bold"
+        bg = "#d0e8ff"
+        fw = "bold"
     else:
-        bg, fw = ("#f9f9f9" if i % 2 == 0 else "#ffffff"), "normal"
-    # Filas de ingreso/utilidad tienen lógica invertida
-    FILAS_INGRESO = {8, 19, 81, 86, 88, 103, 107}
-    ej25_abs = abs(v_ej25 or 0)
-    pr26_abs = abs(v_pr26 or 0)
-    if fila in FILAS_INGRESO:
-        var_bg = "#1e8449" if ej25_abs > pr26_abs else "#c0392b"
-    else:
-        var_bg = "#c0392b" if ej25_abs > pr26_abs else "#1e8449"
-    pct_txt = f"{v_pct*100:.1f}%" if v_pct is not None and not pd.isna(v_pct) else "—"
+        bg = "#f9f9f9" if i % 2 == 0 else "#ffffff"
+        fw = "normal"
     rows_html += (
-        f'<div style="display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr 1fr 1fr 0.8fr;'
-        f'padding:9px 16px;background:{bg};border-bottom:1px solid #eee;">'
-        f'<span style="font-weight:{fw};color:#333;font-size:15px;">{nombre}</span>'
-        f'<span style="text-align:right;font-weight:{fw};color:#555;font-size:15px;">{fmt(v_ej25)}</span>'
-        f'<span style="text-align:right;font-weight:{fw};color:#0052FF;font-size:15px;">{fmt(v_pr26)}</span>'
-        f'<span style="text-align:right;font-weight:{fw};color:#0052FF;font-size:15px;">{fmt(v_pr27)}</span>'
-        f'<span style="text-align:right;font-weight:{fw};color:#0052FF;font-size:15px;">{fmt(v_pr28)}</span>'
-        f'<span style="text-align:right;font-weight:bold;color:{var_bg};font-size:15px;">{fmt(v_var)}</span>'
-        f'<span style="text-align:right;font-weight:bold;color:{var_bg};font-size:15px;">{pct_txt}</span>'
+        f'<div style="display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 1fr;'
+        f'padding:10px 20px;background:{bg};border-bottom:1px solid #eee;">'
+        f'<span style="font-weight:{fw};color:#333;">{nombre}</span>'
+        f'<span style="text-align:right;font-weight:{fw};color:#555;">{fmt(v_ej25)}</span>'
+        f'<span style="text-align:right;font-weight:{fw};color:#0052FF;">{fmt(v_pr26)}</span>'
+        f'<span style="text-align:right;font-weight:{fw};color:#0052FF;">{fmt(v_pr27)}</span>'
+        f'<span style="text-align:right;font-weight:{fw};color:#0052FF;">{fmt(v_pr28)}</span>'
         f'</div>'
     )
 
 st.markdown(
-    f'<div style="max-width:1100px;margin:0 auto;">'
     f'<div style="background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1);overflow:hidden;">'
-    f'{header}{rows_html}</div></div>',
+    f'{header}{rows_html}</div>',
     unsafe_allow_html=True
 )
 
@@ -302,7 +249,7 @@ for f in range(fila_ini, fila_fin):
         continue
     detalle_rows += (
         f'<div style="display:flex;justify-content:space-between;gap:12px;'
-        f'padding:8px 16px;border-bottom:1px solid #eee;font-size:15px;">'
+        f'padding:8px 16px;border-bottom:1px solid #eee;font-size:13px;">'
         f'<span style="color:#333;flex:2;">{nombre[:40]}</span>'
         f'<span style="text-align:right;flex:1;color:#555;">{fmt(v_ej)}</span>'
         f'<span style="text-align:right;flex:1;color:#0052FF;font-weight:600;">{fmt(v_26)}</span>'
